@@ -3,7 +3,7 @@ import "./App.css";
 import { Button, Card, Input, Radio } from "antd";
 
 function App() {
-  const [unisatInstalled, setUnisatInstalled] = useState(false);
+  const [kondorInstalled, setKondorInstalled] = useState(false);
   const [connected, setConnected] = useState(false);
   const [accounts, setAccounts] = useState<string[]>([]);
   const [publicKey, setPublicKey] = useState("");
@@ -16,17 +16,17 @@ function App() {
   const [network, setNetwork] = useState("livenet");
 
   const getBasicInfo = async () => {
-    const unisat = (window as any).unisat;
-    const [address] = await unisat.getAccounts();
+    const kondor = (window as any).unisat;
+    const [address] = await kondor.getAccounts();
     setAddress(address);
 
-    const publicKey = await unisat.getPublicKey();
+    const publicKey = await kondor.getPublicKey();
     setPublicKey(publicKey);
 
-    const balance = await unisat.getBalance();
+    const balance = await kondor.getBalance();
     setBalance(balance);
 
-    const network = await unisat.getNetwork();
+    const network = await kondor.getNetwork();
     setNetwork(network);
   };
 
@@ -59,57 +59,57 @@ function App() {
 
   useEffect(() => {
 
-    async function checkUnisat() {
-      let unisat = (window as any).unisat;
+    async function checkKondor() {
+      let kondor = (window as any).unisat;
 
-      for (let i = 1; i < 10 && !unisat; i += 1) {
+      for (let i = 1; i < 10 && !kondor; i += 1) {
           await new Promise((resolve) => setTimeout(resolve, 100*i));
-          unisat = (window as any).unisat;
+          kondor = (window as any).unisat;
       }
 
-      if(unisat){
-          setUnisatInstalled(true);
-      }else if (!unisat)
+      if(kondor){
+          setKondorInstalled(true);
+      }else if (!kondor)
           return;
 
-      unisat.getAccounts().then((accounts: string[]) => {
+      kondor.getAccounts().then((accounts: string[]) => {
           handleAccountsChanged(accounts);
       });
 
-      unisat.on("accountsChanged", handleAccountsChanged);
-      unisat.on("networkChanged", handleNetworkChanged);
+      kondor.on("accountsChanged", handleAccountsChanged);
+      kondor.on("networkChanged", handleNetworkChanged);
 
       return () => {
-          unisat.removeListener("accountsChanged", handleAccountsChanged);
-          unisat.removeListener("networkChanged", handleNetworkChanged);
+          kondor.removeListener("accountsChanged", handleAccountsChanged);
+          kondor.removeListener("networkChanged", handleNetworkChanged);
       };
     }
 
-    checkUnisat().then();
+    checkKondor().then();
   }, []);
 
-  if (!unisatInstalled) {
+  if (!kondorInstalled) {
     return (
       <div className="App">
         <header className="App-header">
           <div>
             <Button
               onClick={() => {
-                window.location.href = "https://unisat.io";
+                window.location.href = "https://kondor.finance";
               }}
             >
-              Install Unisat Wallet
+              Install Kondor Wallet
             </Button>
           </div>
         </header>
       </div>
     );
   }
-  const unisat = (window as any).unisat;
+  const kondor = (window as any).unisat;
   return (
     <div className="App">
       <header className="App-header">
-        <p>Unisat Wallet Demo</p>
+        <p>Kondor Wallet Demo</p>
 
         {connected ? (
           <div
@@ -149,7 +149,7 @@ function App() {
                 <div style={{ fontWeight: "bold" }}>Network:</div>
                 <Radio.Group
                   onChange={async (e) => {
-                    const network = await unisat.switchNetwork(e.target.value);
+                    const network = await kondor.switchNetwork(e.target.value);
                     setNetwork(network);
                   }}
                   value={network}
@@ -170,11 +170,11 @@ function App() {
           <div>
             <Button
               onClick={async () => {
-                const result = await unisat.requestAccounts();
+                const result = await kondor.requestAccounts();
                 handleAccountsChanged(result);
               }}
             >
-              Connect Unisat Wallet
+              Connect Kondor Wallet
             </Button>
           </div>
         )}
