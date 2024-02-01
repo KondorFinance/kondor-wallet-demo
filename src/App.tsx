@@ -162,6 +162,7 @@ function App() {
 
             <SignPsbtCard />
             <SignMessageCard />
+            <SignBip322MessageCard />
             <PushTxCard />
             <PushPsbtCard />
             <SendBitcoin />
@@ -240,6 +241,37 @@ function SignMessageCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           const signature = await (window as any).unisat.signMessage(message);
+          setSignature(signature);
+        }}
+      >
+        Sign Message
+      </Button>
+    </Card>
+  );
+}
+
+function SignBip322MessageCard() {
+  const [message, setMessage] = useState("hello world~");
+  const [signature, setSignature] = useState("");
+  return (
+    <Card size="small" title="Bip322 Sign Message" style={{ width: 300, margin: 10 }}>
+      <div style={{ textAlign: "left", marginTop: 10 }}>
+        <div style={{ fontWeight: "bold" }}>Message:</div>
+        <Input
+          defaultValue={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+        ></Input>
+      </div>
+      <div style={{ textAlign: "left", marginTop: 10 }}>
+        <div style={{ fontWeight: "bold" }}>Signature:</div>
+        <div style={{ wordWrap: "break-word" }}>{signature}</div>
+      </div>
+      <Button
+        style={{ marginTop: 10 }}
+        onClick={async () => {
+          const signature = await (window as any).unisat.signMessage(message, "bip322-simple");
           setSignature(signature);
         }}
       >
