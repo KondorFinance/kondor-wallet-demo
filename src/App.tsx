@@ -16,7 +16,7 @@ function App() {
   const [network, setNetwork] = useState("livenet");
 
   const getBasicInfo = async () => {
-    const kondor = (window as any).unisat;
+    const kondor = (window as any).kondor;
     const [address] = await kondor.getAccounts();
     setAddress(address);
 
@@ -60,11 +60,11 @@ function App() {
   useEffect(() => {
 
     async function checkKondor() {
-      let kondor = (window as any).unisat;
+      let kondor = (window as any).kondor;
 
       for (let i = 1; i < 10 && !kondor; i += 1) {
           await new Promise((resolve) => setTimeout(resolve, 100*i));
-          kondor = (window as any).unisat;
+          kondor = (window as any).kondor;
       }
 
       if(kondor){
@@ -105,7 +105,7 @@ function App() {
       </div>
     );
   }
-  const kondor = (window as any).unisat;
+  const kondor = (window as any).kondor;
   return (
     <div className="App">
       <header className="App-header">
@@ -206,7 +206,7 @@ function SignPsbtCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const psbtResult = await (window as any).unisat.signPsbt(psbtHex);
+            const psbtResult = await (window as any).kondor.signPsbt(psbtHex);
             setPsbtResult(psbtResult);
           } catch (e) {
             setPsbtResult((e as any).message);
@@ -240,7 +240,7 @@ function SignMessageCard() {
       <Button
         style={{ marginTop: 10 }}
         onClick={async () => {
-          const signature = await (window as any).unisat.signMessage(message);
+          const signature = await (window as any).kondor.signMessage(message);
           setSignature(signature);
         }}
       >
@@ -271,7 +271,7 @@ function SignBip322MessageCard() {
       <Button
         style={{ marginTop: 10 }}
         onClick={async () => {
-          const signature = await (window as any).unisat.signMessage(message, "bip322-simple");
+          const signature = await (window as any).kondor.signMessage(message, "bip322-simple");
           setSignature(signature);
         }}
       >
@@ -307,7 +307,7 @@ function PushTxCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const txid = await (window as any).unisat.pushTx(rawtx);
+            const txid = await (window as any).kondor.pushTx(rawtx);
             setTxid(txid);
           } catch (e) {
             setTxid((e as any).message);
@@ -342,7 +342,7 @@ function PushPsbtCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const txid = await (window as any).unisat.pushPsbt(psbtHex);
+            const txid = await (window as any).kondor.pushPsbt(psbtHex);
             setTxid(txid);
           } catch (e) {
             setTxid((e as any).message);
@@ -390,7 +390,7 @@ function SendBitcoin() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const txid = await (window as any).unisat.sendBitcoin(
+            const txid = await (window as any).kondor.sendBitcoin(
               toAddress,
               satoshis
             );
