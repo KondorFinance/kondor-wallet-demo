@@ -3,7 +3,7 @@ import "./App.css";
 import { Button, Card, Input, Radio } from "antd";
 
 function App() {
-  const [kondorInstalled, setKondorInstalled] = useState(false);
+  const [zkyInstalled, setZkyInstalled] = useState(false);
   const [connected, setConnected] = useState(false);
   const [accounts, setAccounts] = useState<string[]>([]);
   const [publicKey, setPublicKey] = useState("");
@@ -16,17 +16,17 @@ function App() {
   const [network, setNetwork] = useState("livenet");
 
   const getBasicInfo = async () => {
-    const kondor = (window as any).kondor;
-    const [address] = await kondor.getAccounts();
+    const zky = (window as any).zky;
+    const [address] = await zky.getAccounts();
     setAddress(address);
 
-    const publicKey = await kondor.getPublicKey();
+    const publicKey = await zky.getPublicKey();
     setPublicKey(publicKey);
 
-    const balance = await kondor.getBalance();
+    const balance = await zky.getBalance();
     setBalance(balance);
 
-    const network = await kondor.getNetwork();
+    const network = await zky.getNetwork();
     setNetwork(network);
   };
 
@@ -59,57 +59,57 @@ function App() {
 
   useEffect(() => {
 
-    async function checkKondor() {
-      let kondor = (window as any).kondor;
+    async function checkZky() {
+      let zky = (window as any).zky;
 
-      for (let i = 1; i < 10 && !kondor; i += 1) {
+      for (let i = 1; i < 10 && !zky; i += 1) {
           await new Promise((resolve) => setTimeout(resolve, 100*i));
-          kondor = (window as any).kondor;
+          zky = (window as any).zky;
       }
 
-      if(kondor){
-          setKondorInstalled(true);
-      }else if (!kondor)
+      if(zky){
+          setZkyInstalled(true);
+      }else if (!zky)
           return;
 
-      kondor.getAccounts().then((accounts: string[]) => {
+      zky.getAccounts().then((accounts: string[]) => {
           handleAccountsChanged(accounts);
       });
 
-      kondor.on("accountsChanged", handleAccountsChanged);
-      kondor.on("networkChanged", handleNetworkChanged);
+      zky.on("accountsChanged", handleAccountsChanged);
+      zky.on("networkChanged", handleNetworkChanged);
 
       return () => {
-          kondor.removeListener("accountsChanged", handleAccountsChanged);
-          kondor.removeListener("networkChanged", handleNetworkChanged);
+          zky.removeListener("accountsChanged", handleAccountsChanged);
+          zky.removeListener("networkChanged", handleNetworkChanged);
       };
     }
 
-    checkKondor().then();
+    checkZky().then();
   }, []);
 
-  if (!kondorInstalled) {
+  if (!zkyInstalled) {
     return (
       <div className="App">
         <header className="App-header">
           <div>
             <Button
               onClick={() => {
-                window.location.href = "https://kondor.finance";
+                window.location.href = "https://zkywallet.com";
               }}
             >
-              Install Kondor Wallet
+              Install Zky Wallet
             </Button>
           </div>
         </header>
       </div>
     );
   }
-  const kondor = (window as any).kondor;
+  const zky = (window as any).zky;
   return (
     <div className="App">
       <header className="App-header">
-        <p>Kondor Wallet Demo</p>
+        <p>Zky Wallet Demo</p>
 
         {connected ? (
           <div
@@ -149,7 +149,7 @@ function App() {
                 <div style={{ fontWeight: "bold" }}>Network:</div>
                 <Radio.Group
                   onChange={async (e) => {
-                    const network = await kondor.switchNetwork(e.target.value);
+                    const network = await zky.switchNetwork(e.target.value);
                     setNetwork(network);
                   }}
                   value={network}
@@ -171,11 +171,11 @@ function App() {
           <div>
             <Button
               onClick={async () => {
-                const result = await kondor.requestAccounts();
+                const result = await zky.requestAccounts();
                 handleAccountsChanged(result);
               }}
             >
-              Connect Kondor Wallet
+              Connect Zky Wallet
             </Button>
           </div>
         )}
@@ -206,7 +206,7 @@ function SignPsbtCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const psbtResult = await (window as any).kondor.signPsbt(psbtHex);
+            const psbtResult = await (window as any).zky.signPsbt(psbtHex);
             setPsbtResult(psbtResult);
           } catch (e) {
             setPsbtResult((e as any).message);
@@ -240,7 +240,7 @@ function SignMessageCard() {
       <Button
         style={{ marginTop: 10 }}
         onClick={async () => {
-          const signature = await (window as any).kondor.signMessage(message);
+          const signature = await (window as any).zky.signMessage(message);
           setSignature(signature);
         }}
       >
@@ -271,7 +271,7 @@ function SignBip322MessageCard() {
       <Button
         style={{ marginTop: 10 }}
         onClick={async () => {
-          const signature = await (window as any).kondor.signMessage(message, "bip322-simple");
+          const signature = await (window as any).zky.signMessage(message, "bip322-simple");
           setSignature(signature);
         }}
       >
@@ -307,7 +307,7 @@ function PushTxCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const txid = await (window as any).kondor.pushTx(rawtx);
+            const txid = await (window as any).zky.pushTx(rawtx);
             setTxid(txid);
           } catch (e) {
             setTxid((e as any).message);
@@ -342,7 +342,7 @@ function PushPsbtCard() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const txid = await (window as any).kondor.pushPsbt(psbtHex);
+            const txid = await (window as any).zky.pushPsbt(psbtHex);
             setTxid(txid);
           } catch (e) {
             setTxid((e as any).message);
@@ -390,7 +390,7 @@ function SendBitcoin() {
         style={{ marginTop: 10 }}
         onClick={async () => {
           try {
-            const txid = await (window as any).kondor.sendBitcoin(
+            const txid = await (window as any).zky.sendBitcoin(
               toAddress,
               satoshis
             );
