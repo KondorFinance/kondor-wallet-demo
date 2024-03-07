@@ -163,6 +163,7 @@ function App() {
             <SignPsbtCard />
             <SignMessageCard />
             <SignBip322MessageCard />
+            <MultiSignBip322MessageCard />
             <PushTxCard />
             <PushPsbtCard />
             <SendBitcoin />
@@ -276,6 +277,49 @@ function SignBip322MessageCard() {
         }}
       >
         Sign Message
+      </Button>
+    </Card>
+  );
+}
+
+function MultiSignBip322MessageCard() {
+  const [message1, setMessage1] = useState("hello world 1~");
+  const [message2, setMessage2] = useState("hello world 2~");
+  const [signatures, setSignatures] = useState([]);
+  return (
+    <Card size="small" title="Bip322 Multi Message Sign" style={{ width: 300, margin: 10 }}>
+      <div style={{ textAlign: "left", marginTop: 10 }}>
+        <div style={{ fontWeight: "bold" }}>Message 1:</div>
+        <Input
+          defaultValue={message1}
+          onChange={(e) => {
+            setMessage1(e.target.value);
+          }}
+        ></Input>
+        <div style={{ fontWeight: "bold", marginTop: 10 }}>Message 2:</div>
+        <Input
+          defaultValue={message2}
+          onChange={(e) => {
+            setMessage2(e.target.value);
+          }}
+        ></Input>
+      </div>
+      <div style={{ textAlign: "left", marginTop: 10 }}>
+        <div style={{ fontWeight: "bold" }}>Signature 1:</div>
+        <div style={{ wordWrap: "break-word" }}>{signatures[0]}</div>
+      </div>
+      <div style={{ textAlign: "left", marginTop: 10 }}>
+        <div style={{ fontWeight: "bold" }}>Signature 2:</div>
+        <div style={{ wordWrap: "break-word" }}>{signatures[1]}</div>
+      </div>
+      <Button
+        style={{ marginTop: 10 }}
+        onClick={async () => {
+          const signatures = await (window as any).zky.signMultipleMessages([message1, message2], "bip322-simple");
+          setSignatures(signatures); // Expecting a string[] of signatures
+        }}
+      >
+        Sign Messages
       </Button>
     </Card>
   );
